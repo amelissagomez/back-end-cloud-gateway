@@ -1,41 +1,38 @@
 server:
-  port: ${PORT:8762}
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: ${ALLOWED_ORIGINS:*}
+            allowed-headers: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
 
 eureka:
   instance:
     prefer-ip-address: true
-    hostname: ${HOSTNAME:localhost}
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+      defaultZone: ${EUREKA_URL:https://back-end-eureka-966874400900.europe-west1.run.app/eureka/}
 
-spring:
-  application:
-    name: Gateway
-  cloud:
-    gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: true
-              lower-case-service-id: true
-          default-filters:
-            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-
-          globalcors:
-            cors-configurations:
-              '[/**]':
-                      allowed-origins: ${ALLOWED_ORIGINS:*}
-                      allowed-headers: "*"
-                      allowed-methods:
-                      - GET
-                      - POST
-                      - PUT
-                      - DELETE
-                      - PATCH
 management:
   endpoint:
     gateway:
@@ -43,6 +40,4 @@ management:
   endpoints:
     web:
       exposure:
-        include:
-          - '*'
-
+        include: "*"
